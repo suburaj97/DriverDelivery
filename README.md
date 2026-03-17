@@ -73,8 +73,8 @@ APK_BUILD.md           # Android APK build steps
 ### 4.2 Clone the repository
 
 ```bash
-git clone <your-repo-url> driver-delivery-app
-cd driver-delivery-app
+git clone github.com/suburaj97/DriverDeliver
+cd DriverDeliver
 ```
 
 ### 4.3 Install dependencies
