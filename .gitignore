@@ -78,6 +78,9 @@ yarn-error.log
 .ai/
 **/*.md
 !/README.md
+!/FIREBASE_STRUCTURE.md
+!/TESTING.md
+!/APK_BUILD.md
 .env
 .firebaserc
 GoogleService-Info.plist
