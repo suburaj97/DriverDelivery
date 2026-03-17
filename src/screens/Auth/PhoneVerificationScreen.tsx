@@ -95,6 +95,7 @@ export const PhoneVerificationScreen: React.FC<Props> = () => {
   const handleVerify = async () => {
     setError(undefined);
     setCodeError(undefined);
+    setPhoneError(undefined);
 
     if (!firebaseAuth.currentUser || !uid) {
       setError(t('errors.auth.signInRequiredForOtp'));
@@ -108,9 +109,22 @@ export const PhoneVerificationScreen: React.FC<Props> = () => {
 
     setLoading(true);
     try {
-      const ok = await verifyOtp(verificationId, code);
-      if (!ok) {
-        setCodeError(t('errors.invalidVerificationCode'));
+      const result = await verifyOtp(verificationId, code);
+      if (!result.ok) {
+        if (result.errorCode === 'auth/invalid-verification-code') {
+          setCodeError(t('errors.invalidVerificationCode'));
+          return;
+        }
+
+        if (
+          result.errorCode === 'auth/credential-already-in-use' ||
+          result.errorCode === 'auth/phone-number-already-exists'
+        ) {
+          setPhoneError(t('errors.auth.phoneAlreadyInUse'));
+          return;
+        }
+
+        setError(t('errors.verificationFailed'));
         return;
       }
 

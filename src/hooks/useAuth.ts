@@ -27,9 +27,9 @@ export const useAuth = () => {
   }, [dispatch]);
 
   const signUp = useCallback(
-    async (inputEmail: string, password: string) => {
+    async (inputEmail: string, password: string, name: string) => {
       await dispatch(
-        registerDriver({ email: inputEmail.trim(), password }),
+        registerDriver({ email: inputEmail.trim(), password, name }),
       ).unwrap();
     },
     [dispatch],

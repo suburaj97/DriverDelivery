@@ -14,6 +14,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { DeliveryCard } from '@/components/DeliveryCard';
@@ -43,6 +44,7 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
   const { t } = useTranslation();
   const hasMapsApiKey = Boolean(Config.GOOGLE_MAPS_API_KEY);
   const mapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasMapEverBeenReadyRef = useRef(false);
   const inlineMapRef = useRef<MapView | null>(null);
   const fullMapRef = useRef<MapView | null>(null);
   const lastGoogleOptimizeAtRef = useRef<number>(0);
@@ -130,6 +132,12 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
   }, [currentLocation, routeOrder]);
 
   const firstPoint = polylineCoords[0];
+  const hasFirstPoint = polylineCoords.length > 0;
+  const stopsSignature = React.useMemo(
+    () => routeOrder.map((d) => d.id).join('|'),
+    [routeOrder],
+  );
+  const lastFitKeyRef = useRef<string>('');
 
   useEffect(() => {
     if (mapTimeoutRef.current) {
@@ -142,15 +150,24 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
       return;
     }
 
-    if (!firstPoint) {
-      setMapStatus('loading');
+    if (!hasFirstPoint) {
+      // Once the map has been ready, keep it stable even if location briefly drops.
+      if (!hasMapEverBeenReadyRef.current) {
+        setMapStatus('loading');
+      }
+      return;
+    }
+
+    // Only use the readiness timeout on first load; otherwise it can flip the map
+    // to "failed" even when the map is already mounted.
+    if (hasMapEverBeenReadyRef.current || mapStatus === 'ready') {
       return;
     }
 
     setMapStatus('loading');
     mapTimeoutRef.current = setTimeout(() => {
       console.log('[route] Map did not become ready in time; using fallback UI');
-      setMapStatus('failed');
+      setMapStatus((prev) => (prev === 'ready' ? prev : 'failed'));
     }, 4000);
 
     return () => {
@@ -159,7 +176,7 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
         mapTimeoutRef.current = null;
       }
     };
-  }, [hasMapsApiKey, firstPoint]);
+  }, [hasFirstPoint, hasMapsApiKey, mapStatus]);
 
   const mapHeight = React.useMemo(() => {
     return height * (height >= 1024 ? 0.35 : 0.42);
@@ -296,6 +313,7 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
               clearTimeout(mapTimeoutRef.current);
               mapTimeoutRef.current = null;
             }
+            hasMapEverBeenReadyRef.current = true;
             setMapStatus('ready');
           }}
           initialRegion={initialRegion}
@@ -373,6 +391,10 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
     const activeMap = (isMapFullScreen ? fullMapRef : inlineMapRef).current;
     if (!activeMap) return;
 
+    const fitKey = `${isMapFullScreen ? 'full' : 'inline'}|${stopsSignature}`;
+    if (lastFitKeyRef.current === fitKey) return;
+    lastFitKeyRef.current = fitKey;
+
     // Fit once for a good "preview" (driver + all stops). After the user touches
     // the map, stop auto-fitting to avoid surprise zoom changes.
     const edgePadding = isMapFullScreen
@@ -383,7 +405,7 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
       edgePadding,
       animated: true,
     });
-  }, [hasMapsApiKey, isMapFullScreen, mapStatus, polylineCoords]);
+  }, [hasMapsApiKey, isMapFullScreen, mapStatus, polylineCoords, stopsSignature]);
 
   const renderItem: ListRenderItem<Delivery> = ({ item }) => (
     <Animated.View entering={FadeInDown.duration(220)}>
@@ -411,21 +433,23 @@ export const OptimizedRouteScreen: React.FC<Props> = () => {
           animationType="slide"
           onRequestClose={() => setIsMapFullScreen(false)}
         >
-          <SafeAreaView
-            style={[
-              styles.listSection,
-              { backgroundColor: theme.colors.background },
-            ]}
-            edges={['top', 'bottom']}
-          >
-            <View style={styles.mapContainerFull}>
-              {renderMap({
-                fullScreen: true,
-                mapRef: fullMapRef,
-                active: isMapFullScreen,
-              })}
-            </View>
-          </SafeAreaView>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView
+              style={[
+                styles.listSection,
+                { backgroundColor: theme.colors.background },
+              ]}
+              edges={['top', 'bottom']}
+            >
+              <View style={styles.mapContainerFull}>
+                {renderMap({
+                  fullScreen: true,
+                  mapRef: fullMapRef,
+                  active: isMapFullScreen,
+                })}
+              </View>
+            </SafeAreaView>
+          </GestureHandlerRootView>
         </Modal>
 
         <FlatList

@@ -6,7 +6,7 @@ import type { Driver } from '@/types/Driver';
 import {
   createDriver,
   getDriver,
-  updateLastLogin,
+  updateDriverOnLogin,
 } from '@/services/driverService';
 import {
   signInWithEmailPassword,
@@ -104,13 +104,22 @@ export const loginDriver = createAsyncThunk<
 
 export const registerDriver = createAsyncThunk<
   void,
-  { email: string; password: string },
+  { email: string; password: string; name: string },
   { state: RootState; dispatch: AppDispatch; rejectValue: string }
->('auth/registerDriver', async ({ email, password }, thunkApi) => {
+>('auth/registerDriver', async ({ email, password, name }, thunkApi) => {
   const { dispatch, rejectWithValue } = thunkApi;
   dispatch(clearAuthError());
   try {
-    await signUpWithEmailPassword(email, password);
+    const user = await signUpWithEmailPassword(email, password);
+
+    const trimmedName = name.trim();
+    if (trimmedName) {
+      // Best-effort persistence of name across Auth + Firestore profile.
+      // This avoids a race where the auth listener creates the driver profile
+      // before displayName is set.
+      updateDriverOnLogin(user.uid, { email, name: trimmedName }).catch(() => {});
+      user.updateProfile({ displayName: trimmedName }).catch(() => {});
+    }
   } catch (err) {
     const code = getFirebaseAuthErrorCode(err);
     const key = mapFirebaseAuthErrorCodeToI18nKey(code, 'errors.auth.signUpFailed');
@@ -144,16 +153,25 @@ export const loadDriverProfile = createAsyncThunk<
 >('auth/loadDriverProfile', async ({ uid, email }, thunkApi) => {
   const { dispatch, rejectWithValue } = thunkApi;
   try {
+    const authUser = firebaseAuth.currentUser;
+    const authName = authUser?.displayName ?? '';
+    const authPhone = authUser?.phoneNumber ?? '';
+
     const existing = await getDriver(uid);
     if (existing) {
       dispatch(setDriver(existing));
-      await updateLastLogin(uid);
+      await updateDriverOnLogin(uid, {
+        email: email ?? existing.email,
+        name: authName || existing.name,
+        phone: existing.phone ? undefined : authPhone,
+      });
       return existing;
     }
 
     const newDriver: Driver = {
       id: uid,
       email: email ?? '',
+      name: authName,
       phone: '',
       createdAt: new Date().toISOString(),
     };

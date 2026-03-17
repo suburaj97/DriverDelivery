@@ -16,6 +16,7 @@ Stores driver profile information.
 
 ```json
 {
+  "name": "Driver Name",
   "email": "driver@example.com",
   "phone": "+1 555 123 4567",
   "createdAt": "2024-01-01T12:00:00.000Z",
@@ -26,6 +27,7 @@ Stores driver profile information.
 
 **Fields:**
 
+- `name` (string, optional) — driver display name.
 - `email` (string) — driver email address used for authentication.
 - `phone` (string) — verified driver phone number.
 - `createdAt` (timestamp) — when the driver profile was created.
@@ -116,4 +118,3 @@ Stores temporary OTP codes for phone verification.
 - `createdAt` (timestamp) — when the OTP was generated.
 
 This collection is written by the app during OTP request and read during OTP verification.
-

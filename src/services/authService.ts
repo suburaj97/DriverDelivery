@@ -7,6 +7,7 @@ import {
 import auth from '@react-native-firebase/auth';
 
 import { firebaseAuth } from '@/config/firebaseConfig';
+import { getFirebaseAuthErrorCode } from '@/utils/firebaseAuthError';
 
 export const signInWithEmailPassword = async (
   email: string,
@@ -85,7 +86,7 @@ export const requestOtp = async (phone: string): Promise<OtpRequestResult> => {
 export const verifyOtp = async (
   verificationId: string,
   code: string,
-): Promise<boolean> => {
+): Promise<{ ok: true } | { ok: false; errorCode: string | null }> => {
   const user = firebaseAuth.currentUser;
   if (!user) {
     throw new Error('User must be signed in to verify OTP.');
@@ -98,8 +99,8 @@ export const verifyOtp = async (
   try {
     const credential = auth.PhoneAuthProvider.credential(verificationId, code);
     await user.updatePhoneNumber(credential);
-    return true;
-  } catch {
-    return false;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, errorCode: getFirebaseAuthErrorCode(err) };
   }
 };

@@ -19,6 +19,9 @@ export function mapFirebaseAuthErrorCodeToI18nKey(
   switch (code) {
     case 'auth/email-already-in-use':
       return 'errors.auth.emailAlreadyInUse';
+    case 'auth/credential-already-in-use':
+    case 'auth/phone-number-already-exists':
+      return 'errors.auth.phoneAlreadyInUse';
     case 'auth/invalid-email':
       return 'errors.invalidEmail';
     case 'auth/user-not-found':
@@ -37,4 +40,3 @@ export function mapFirebaseAuthErrorCodeToI18nKey(
       return fallbackKey;
   }
 }
-

@@ -23,13 +23,16 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
   const { signUp } = useAuth();
   const theme = useTheme();
   const { t } = useTranslation();
+  const emailRef = React.useRef<TextInput>(null);
   const passwordRef = React.useRef<TextInput>(null);
   const confirmPasswordRef = React.useRef<TextInput>(null);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
+  const [nameError, setNameError] = useState<string | undefined>();
   const [emailError, setEmailError] = useState<string | undefined>();
   const [passwordError, setPasswordError] = useState<string | undefined>();
   const [confirmPasswordError, setConfirmPasswordError] = useState<
@@ -38,12 +41,15 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleSignUp = async () => {
     setError(undefined);
+    setNameError(undefined);
     setEmailError(undefined);
     setPasswordError(undefined);
     setConfirmPasswordError(undefined);
 
+    const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
+    const nextNameError = trimmedName ? undefined : t('common.required');
     const nextEmailError = trimmedEmail
       ? isValidEmail
         ? undefined
@@ -54,7 +60,8 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
       ? undefined
       : t('common.required');
 
-    if (nextEmailError || nextPasswordError || nextConfirmPasswordError) {
+    if (nextNameError || nextEmailError || nextPasswordError || nextConfirmPasswordError) {
+      setNameError(nextNameError);
       setEmailError(nextEmailError);
       setPasswordError(nextPasswordError);
       setConfirmPasswordError(nextConfirmPasswordError);
@@ -67,7 +74,7 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
     setLoading(true);
     try {
-      await signUp(trimmedEmail, password);
+      await signUp(trimmedEmail, password, trimmedName);
       navigation.goBack();
     } catch (e) {
       const msg =
@@ -104,6 +111,23 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
         <ErrorBanner message={error} visible={!!error} />
 
         <InputField
+          label={t('signUp.name')}
+          icon="user"
+          value={name}
+          onChangeText={(v) => {
+            setName(v);
+            if (nameError) setNameError(undefined);
+          }}
+          errorText={nameError}
+          placeholder={t('signUp.namePlaceholder')}
+          autoCapitalize="words"
+          autoCorrect={false}
+          returnKeyType="next"
+          onSubmitEditing={() => emailRef.current?.focus()}
+          accessibilityLabel={t('signUp.name')}
+        />
+        <InputField
+          ref={emailRef}
           label={t('signUp.email')}
           icon="mail"
           value={email}
