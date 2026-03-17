@@ -1,0 +1,154 @@
+{
+  "common": {
+    "loading": "Cargando…",
+    "required": "Obligatorio",
+    "back": "Volver",
+    "signIn": "Iniciar sesión",
+    "avatar": "Avatar",
+    "refresh": "Actualizar",
+    "cancel": "Cancelar",
+    "logout": "Cerrar sesión"
+  },
+  "auth": {
+    "brandName": "DriverDelivery",
+    "tagline": "Accede a tus entregas de forma segura"
+  },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "navigation": {
+    "driverLogin": "Acceso del conductor",
+    "signUp": "Crear cuenta",
+    "verifyPhone": "Verificar teléfono",
+    "myDeliveries": "Mis entregas",
+    "optimizedRoute": "Ruta optimizada",
+    "settings": "Ajustes"
+  },
+  "settings": {
+    "themeTitle": "Tema",
+    "themeSubtitle": "Elige cómo se ve la app. Por defecto es Sistema.",
+    "themeSystemSubtitle": "Coincide con los ajustes del dispositivo",
+    "themeLightSubtitle": "Usar siempre tema claro",
+    "themeDarkSubtitle": "Usar siempre tema oscuro",
+    "accountTitle": "Cuenta",
+    "accountSubtitle": "Administra tu sesión.",
+    "logoutTitle": "Cerrar sesión",
+    "logoutSubtitle": "Salir de esta cuenta en este dispositivo.",
+    "logoutA11y": "Cerrar sesión",
+    "logoutConfirmTitle": "¿Cerrar sesión?",
+    "logoutConfirmMessage": "Necesitarás iniciar sesión de nuevo para acceder a las entregas."
+  },
+  "login": {
+    "cardA11y": "Formulario de acceso",
+    "title": "Acceso del conductor",
+    "subtitle": "Usa tus credenciales para ver las entregas.",
+    "email": "Correo",
+    "emailPlaceholder": "conductor@ejemplo.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Tu contraseña",
+    "submit": "Entrar",
+    "createAccount": "Crear cuenta",
+    "verifyPhone": "Verificar teléfono"
+    ,
+    "noAccountPrefix": "¿No tienes una cuenta?"
+  },
+  "signUp": {
+    "cardA11y": "Formulario de creación de cuenta",
+    "title": "Crear tu cuenta",
+    "subtitle": "Usa correo y contraseña para empezar.",
+    "email": "Correo",
+    "emailPlaceholder": "conductor@ejemplo.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Elige una contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "confirmPasswordPlaceholder": "Repite la contraseña",
+    "submit": "Crear cuenta",
+    "backToLogin": "Volver al acceso"
+    ,
+    "haveAccountPrefix": "¿Ya tienes una cuenta?"
+  },
+  "phoneVerification": {
+    "cardA11y": "Verificación de teléfono",
+    "title": "Verificar teléfono",
+    "subtitle": "Recibe un OTP y confirma tu número.",
+    "phoneNumber": "Número de teléfono",
+    "phonePlaceholder": "+1 555 123 4567",
+    "sendOtp": "Enviar OTP",
+    "resendOtp": "Reenviar OTP",
+    "verificationCode": "Código de verificación",
+    "codePlaceholder": "123456",
+    "verify": "Verificar",
+    "verifyA11y": "Verificar código"
+  },
+  "errors": {
+    "enterEmailPassword": "Ingresa correo y contraseña.",
+    "invalidEmail": "Ingresa un correo válido.",
+    "invalidPhone": "Ingresa un número de teléfono válido.",
+    "signInFailed": "No se pudo iniciar sesión. Verifica tus datos.",
+    "signUpFailed": "No se pudo crear la cuenta. Inténtalo de nuevo.",
+    "signUp": {
+      "enterEmailPassword": "Ingresa correo y contraseñas.",
+      "passwordsDoNotMatch": "Las contraseñas no coinciden."
+    },
+    "enterPhoneNumber": "Ingresa tu número de teléfono.",
+    "sendOtpFailed": "No se pudo enviar el OTP. Inténtalo de nuevo.",
+    "enterVerificationCode": "Ingresa el código de verificación.",
+    "invalidVerificationCode": "Código de verificación inválido.",
+    "verificationFailed": "La verificación falló. Inténtalo de nuevo.",
+    "auth": {
+      "loadAuthStateFailed": "No se pudo cargar el estado de autenticación.",
+      "signInFailed": "No se pudo iniciar sesión.",
+      "signUpFailed": "No se pudo crear la cuenta.",
+      "signInRequiredForOtp": "Inicia sesión antes de verificar tu número de teléfono.",
+      "invalidCredentials": "Correo o contraseña inválidos.",
+      "emailAlreadyInUse": "Ya existe una cuenta con este correo.",
+      "weakPassword": "La contraseña es muy débil. Usa una contraseña más segura.",
+      "networkRequestFailed": "Error de red. Revisa tu conexión a internet.",
+      "tooManyRequests": "Demasiados intentos. Inténtalo más tarde.",
+      "operationNotAllowed": "Este método de inicio de sesión no está habilitado en el proyecto.",
+      "signOutFailed": "No se pudo cerrar sesión.",
+      "loadDriverProfileFailed": "No se pudo cargar el perfil del conductor."
+    },
+    "delivery": {
+      "syncFailed": "No se pudieron sincronizar las entregas.",
+      "refreshFailed": "No se pudieron actualizar las entregas.",
+      "updateStatusFailed": "No se pudo actualizar el estado de la entrega."
+    }
+  },
+  "deliveries": {
+    "emptyTitle": "Aún no hay entregas asignadas",
+    "emptyDescription": "Cuando haya nuevas entregas asignadas, aparecerán aquí.",
+    "viewOptimizedRoute": "Ver ruta optimizada",
+    "orderNumber": "Pedido #{{orderId}}",
+    "navigateA11y": "Navegar al pedido {{orderId}}",
+    "markDelivered": "Marcar entregado",
+    "markDeliveredA11y": "Marcar el pedido {{orderId}} como entregado",
+    "cardA11y": "Pedido {{orderId}}, {{customerName}}",
+    "status": {
+      "pending": "Pendiente",
+      "inProgress": "En curso",
+      "delivered": "Entregado"
+    }
+  },
+  "route": {
+    "driverMarkerTitle": "Conductor",
+    "mapLoadingTitle": "Cargando mapa",
+    "mapLoadingDescription": "Esperando la ubicación o las coordenadas de las entregas.",
+    "missingMapsKeyTitle": "Mapas no configurados",
+    "missingMapsKeyDescription": "Falta GOOGLE_MAPS_API_KEY. Agrégala a tu .env y vuelve a compilar la app.",
+    "mapUnavailableTitle": "Mapa no disponible",
+    "mapUnavailableDescription": "Mostrando solo las paradas. La optimización de ruta sigue funcionando.",
+    "optimizedLiveTraffic": "Optimizado con tiempo de viaje",
+    "optimizedDistanceOnly": "Optimizado solo por distancia",
+    "fullScreenA11y": "Abrir mapa en pantalla completa",
+    "exitFullScreenA11y": "Salir de pantalla completa",
+    "recenterA11y": "Centrar el mapa en tu ubicación",
+    "stopsTitle": "Paradas",
+    "stopsSubtitle": "Ordenadas por la siguiente parada más cercana.",
+    "emptyTitle": "No hay entregas activas",
+    "emptyDescription": "Cuando tengas entregas asignadas, la ruta optimizada aparecerá aquí."
+  }
+}

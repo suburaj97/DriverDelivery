@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Required by mipmap-anydpi-v26 adaptive launcher icons -->
+  <color name="ic_launcher_background">#FFFFFF</color>
+</resources>
